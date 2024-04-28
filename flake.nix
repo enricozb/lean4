@@ -32,29 +32,29 @@
       # An old nixpkgs for creating releases with an old glibc
       pkgsDist-old-aarch = import nixpkgs-old { localSystem.config = "aarch64-unknown-linux-gnu"; };
 
-      lean-packages = pkgs.callPackage (./nix/packages.nix) { src = ./.; inherit nix lean4-mode; };
+      lean-packages = pkgs.callPackage (./nix/packages.nix) { src = ./.; githash = self.rev; inherit nix lean4-mode; };
 
       devShellWithDist = pkgsDist: pkgs.mkShell.override {
-	  stdenv = pkgs.overrideCC pkgs.stdenv lean-packages.llvmPackages.clang;
-	} ({
-	  buildInputs = with pkgs; [
-	    cmake gmp ccache
-	    lean-packages.llvmPackages.llvm  # llvm-symbolizer for asan/lsan
-	    # TODO: only add when proven to not affect the flakification
-	    #pkgs.python3
-	  ];
-	  # https://github.com/NixOS/nixpkgs/issues/60919
-	  hardeningDisable = [ "all" ];
-	  # more convenient `ctest` output
-	  CTEST_OUTPUT_ON_FAILURE = 1;
-	} // pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
-	  GMP = pkgsDist.gmp.override { withStatic = true; };
-	  GLIBC = pkgsDist.glibc;
-	  GLIBC_DEV = pkgsDist.glibc.dev;
-	  GCC_LIB = pkgsDist.gcc.cc.lib;
-	  ZLIB = pkgsDist.zlib;
-	  GDB = pkgsDist.gdb;
-	});
+        stdenv = pkgs.overrideCC pkgs.stdenv lean-packages.llvmPackages.clang;
+      } ({
+        buildInputs = with pkgs; [
+          cmake gmp ccache
+          lean-packages.llvmPackages.llvm  # llvm-symbolizer for asan/lsan
+          # TODO: only add when proven to not affect the flakification
+          #pkgs.python3
+        ];
+        # https://github.com/NixOS/nixpkgs/issues/60919
+        hardeningDisable = [ "all" ];
+        # more convenient `ctest` output
+        CTEST_OUTPUT_ON_FAILURE = 1;
+      } // pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
+        GMP = pkgsDist.gmp.override { withStatic = true; };
+        GLIBC = pkgsDist.glibc;
+        GLIBC_DEV = pkgsDist.glibc.dev;
+        GCC_LIB = pkgsDist.gcc.cc.lib;
+        ZLIB = pkgsDist.zlib;
+        GDB = pkgsDist.gdb;
+      });
     in {
       packages = lean-packages // rec {
         debug = lean-packages.override { debug = true; };
