@@ -1,4 +1,4 @@
-{ src, debug ? false, stage0debug ? false, extraCMakeFlags ? [],
+{ src, githash, debug ? false, stage0debug ? false, extraCMakeFlags ? [],
   stdenv, lib, cmake, gmp, git, gnumake, bash, buildLeanPackage, writeShellScriptBin, runCommand, symlinkJoin, lndir, perl, gnused, darwin, llvmPackages, linkFarmFromDrvs,
   ... } @ args:
 with builtins;
@@ -11,6 +11,10 @@ rec {
     # https://github.com/NixOS/nixpkgs/issues/60919
     hardeningDisable = [ "all" ];
     dontStrip = (args.debug or debug);
+
+    postPatch = ''
+      substituteInPlace CMakeLists.txt --replace 'set(GIT_SHA1 "")' 'set(GIT_SHA1 "${githash}")'
+    '';
 
     postConfigure = ''
       patchShebangs .
