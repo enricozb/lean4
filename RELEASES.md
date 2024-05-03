@@ -8,7 +8,10 @@ This file contains work-in-progress notes for the upcoming release, as well as p
 Please check the [releases](https://github.com/leanprover/lean4/releases) page for the current status
 of each version.
 
-v4.8.0 (development in progress)
+v4.9.0 (development in progress)
+---------
+
+v4.8.0 
 ---------
 
 * **Executables configured with `supportInterpreter := true` on Windows should now be run via `lake exe` to function properly.**
@@ -84,6 +87,8 @@ v4.8.0 (development in progress)
   These can be set when using `#guard_msgs` to make tests not depend on the particular names of metavariables.
   [#3798](https://github.com/leanprover/lean4/pull/3798) and
   [#3978](https://github.com/leanprover/lean4/pull/3978).
+
+* Hovers for terms in `match` expressions in the Infoview now reliably show the correct term.
 
 * Added `@[induction_eliminator]` and `@[cases_eliminator]` attributes to be able to define custom eliminators
   for the `induction` and `cases` tactics, replacing the `@[eliminator]` attribute.
