@@ -32,7 +32,7 @@
       # An old nixpkgs for creating releases with an old glibc
       pkgsDist-old-aarch = import nixpkgs-old { localSystem.config = "aarch64-unknown-linux-gnu"; };
 
-      lean-packages = pkgs.callPackage (./nix/packages.nix) { src = ./.; githash = self.rev; inherit nix lean4-mode; };
+      lean-packages = pkgs.callPackage (./nix/packages.nix) { src = ./.; githash = "dcccfb73cb247e9478220375ab7de03f7c67e505"; inherit nix lean4-mode; };
 
       devShellWithDist = pkgsDist: pkgs.mkShell.override {
         stdenv = pkgs.overrideCC pkgs.stdenv lean-packages.llvmPackages.clang;
